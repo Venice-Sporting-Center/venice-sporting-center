@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venice Sporting Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent: #0D7C5F;
+      --accent-light: #E6F5F0;
+      --accent2: #D97706;
+      --accent2-light: #FEF3C7;
+      --text: #1A2332;
+      --text-secondary: #5A6578;
+      --bg: #F7F8FA;
+      --bg-warm: #FFFBF5;
+      --border: #E2E6EC;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: #fff; -webkit-font-smoothing: antialiased; font-family: 'DM Sans', sans-serif; }
+
+    @media (max-width: 768px) {
+      .hero-grid { grid-template-columns: 1fr !important; }
+      .desktop-nav { display: none !important; }
+      .mobile-toggle { display: flex !important; }
+      .gallery-grid { grid-template-columns: 1fr 1fr !important; }
+      .gallery-grid > div { grid-column: span 1 !important; }
+      .two-col { grid-template-columns: 1fr !important; }
+    }
+    @media (min-width: 769px) {
+      .mobile-menu { display: none !important; }
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    /* ─── NAV ─── */
+    const NAV_ITEMS = [
+      { id: 'home', label: 'Home' },
+      { id: 'chi-siamo', label: 'Chi Siamo' },
+      { id: 'prenotazioni', label: 'Prenotazioni' },
+      { id: 'scuola-tennis', label: 'Scuola Tennis' },
+      { id: 'tornei', label: 'Tornei' },
+      { id: 'contatti', label: 'Contatti' },
+    ];
+
+    function Nav({ currentPage, setPage, scrolled }) {
+      const [mobileOpen, setMobileOpen] = React.useState(false);
+
+      const navLinkStyle = (active) => ({
+        padding: '8px 16px', borderRadius: 8, cursor: 'pointer',
+        fontSize: 14, fontWeight: active ? 700 : 500, fontFamily: 'DM Sans, sans-serif',
+        color: active ? 'var(--accent)' : 'var(--text)',
+        background: active ? 'var(--accent-light)' : 'transparent',
+        border: 'none', transition: 'all 0.2s',
+      });
+
+      const socialIconStyle = {
+        width: 36, height: 36, borderRadius: '50%', display: 'flex',
+        alignItems: 'center', justifyContent: 'center', background: 'var(--accent-light)',
+        color: 'var(--accent)', cursor: 'pointer', border: 'none', transition: 'all 0.2s',
+        textDecoration: 'none',
+      };
+
+      return (
+        <header style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
+          background: scrolled ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.8)',
+          backdropFilter: 'blur(12px)',
+          boxShadow: scrolled ? '0 1px 12px rgba(0,0,0,0.08)' : 'none',
+          transition: 'background 0.3s, box-shadow 0.3s',
+        }}>
+          <div style={{
+            maxWidth: 1280, margin: '0 auto', padding: '0 32px', height: 72,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
+            {/* Logo area */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}
+              onClick={() => { setPage('home'); setMobileOpen(false); }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: 8, background: 'var(--accent)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff', fontWeight: 800, fontSize: 15, fontFamily: 'Sora, sans-serif',
+              }}>VSC</div>
+              <div style={{
+                width: 36, height: 36, borderRadius: 6, background: 'var(--accent2)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff', fontWeight: 700, fontSize: 9, fontFamily: 'Sora, sans-serif',
+                textAlign: 'center', lineHeight: 1.2,
+              }}>PB</div>
+              <div style={{ fontFamily: 'Sora, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--text)', lineHeight: 1.2 }}>
+                Venice<br/>Sporting Center
+              </div>
+            </div>
+
+            {/* Desktop nav */}
+            <nav style={{ display: 'flex', alignItems: 'center', gap: 4 }} className="desktop-nav">
+              {NAV_ITEMS.map(item => (
+                <button key={item.id} style={navLinkStyle(currentPage === item.id)}
+                  onClick={() => setPage(item.id)}
+                  onMouseEnter={e => { if (currentPage !== item.id) e.target.style.background = 'var(--accent-light)'; }}
+                  onMouseLeave={e => { if (currentPage !== item.id) e.target.style.background = 'transparent'; }}>
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+
+            {/* Social icons */}
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginLeft: 16 }} className="desktop-nav">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style={socialIconStyle}
+                onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'var(--accent-light)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                title="Instagram">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg>
+              </a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" style={socialIconStyle}
+                onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'var(--accent-light)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                title="Facebook">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              </a>
+            </div>
+
+            {/* Mobile hamburger */}
+            <button style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', padding: 8, color: 'var(--text)' }}
+              className="mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)}>
+              {mobileOpen
+                ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              }
+            </button>
+          </div>
+
+          {/* Mobile menu */}
+          {mobileOpen && (
+            <div className="mobile-menu" style={{
+              background: 'rgba(255,255,255,0.98)', padding: '16px 32px 24px',
+              display: 'flex', flexDirection: 'column', gap: 4, borderTop: '1px solid var(--border)',
+            }}>
+              {NAV_ITEMS.map(item => (
+                <button key={item.id} style={{ padding: '10px 16px', borderRadius: 8, cursor: 'pointer',
+                  fontSize: 15, fontWeight: currentPage === item.id ? 700 : 500, fontFamily: 'DM Sans, sans-serif',
+                  color: currentPage === item.id ? 'var(--accent)' : 'var(--text)',
+                  background: currentPage === item.id ? 'var(--accent-light)' : 'transparent',
+                  border: 'none', textAlign: 'left' }}
+                  onClick={() => { setPage(item.id); setMobileOpen(false); }}>
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </header>
+      );
+    }
+
+    /* ─── HOMEPAGE ─── */
+    function HomePage({ setPage }) {
+      const [heroVisible, setHeroVisible] = React.useState(false);
+      React.useEffect(() => { const t = setTimeout(() => setHeroVisible(true), 80); return () => clearTimeout(t); }, []);
+
+      return (
+        <div>
+          {/* Hero */}
+          <section style={{
+            minHeight: '100vh', display: 'flex', alignItems: 'center',
+            position: 'relative', overflow: 'hidden',
+            background: 'linear-gradient(135deg, var(--bg) 0%, var(--accent-light) 100%)',
+          }}>
+            {/* Venetian wave pattern */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.06, pointerEvents: 'none' }}>
+              <svg width="100%" height="100%" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+                {[...Array(8)].map((_, i) => (
+                  <path key={i}
+                    d={`M-100 ${200 + i * 80} Q 360 ${150 + i * 80 + (i % 2 ? 40 : -40)} 720 ${200 + i * 80} T 1540 ${200 + i * 80}`}
+                    stroke="var(--accent)" fill="none" strokeWidth="2" />
+                ))}
+              </svg>
+            </div>
+
+            <div style={{
+              maxWidth: 1280, margin: '0 auto', padding: '120px 32px 80px',
+              display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center', width: '100%',
+            }} className="hero-grid">
+              <div style={{
+                transform: heroVisible ? 'translateY(0)' : 'translateY(30px)',
+                opacity: heroVisible ? 1 : 0, transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+              }}>
+                <div style={{
+                  display: 'inline-block', padding: '6px 14px', borderRadius: 20,
+                  background: 'var(--accent)', color: '#fff', fontSize: 13, fontWeight: 600,
+                  fontFamily: 'DM Sans, sans-serif', marginBottom: 20, letterSpacing: 0.5,
+                }}>Mestre, Venezia</div>
+                <h1 style={{
+                  fontFamily: 'Sora, sans-serif', fontSize: 'clamp(36px, 5vw, 64px)',
+                  fontWeight: 800, lineHeight: 1.08, color: 'var(--text)',
+                  marginBottom: 20, letterSpacing: '-0.02em',
+                }}>
+                  Il tuo centro<br/>sportivo a<br/>
+                  <span style={{ color: 'var(--accent)' }}>Venezia</span>
+                </h1>
+                <p style={{
+                  fontFamily: 'DM Sans, sans-serif', fontSize: 18, lineHeight: 1.6,
+                  color: 'var(--text-secondary)', maxWidth: 440, marginBottom: 32,
+                }}>
+                  Tennis, calcio a 5, beach volley e tanto altro. Prenota il tuo campo, scopri i nostri corsi e vivi lo sport con noi.
+                </p>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                  <button onClick={() => setPage('prenotazioni')} style={{
+                    padding: '14px 32px', borderRadius: 12, border: 'none',
+                    background: 'var(--accent)', color: '#fff', fontSize: 16, fontWeight: 700,
+                    fontFamily: 'DM Sans, sans-serif', cursor: 'pointer',
+                    transition: 'all 0.2s', boxShadow: '0 4px 20px rgba(13,124,95,0.3)',
+                  }}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                    Prenota un Campo
+                  </button>
+                  <button onClick={() => setPage('chi-siamo')} style={{
+                    padding: '14px 32px', borderRadius: 12,
+                    border: '2px solid var(--border)', background: 'transparent',
+                    color: 'var(--text)', fontSize: 16, fontWeight: 600,
+                    fontFamily: 'DM Sans, sans-serif', cursor: 'pointer', transition: 'all 0.2s',
+                  }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text)'; }}>
+                    Scopri il Centro
+                  </button>
+                </div>
+              </div>
+
+              <div style={{
+                transform: heroVisible ? 'translateY(0)' : 'translateY(40px)',
+                opacity: heroVisible ? 1 : 0, transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s',
+              }}>
+                {/* Hero image placeholder */}
+                <div style={{
+                  width: '100%', aspectRatio: '4/3', borderRadius: 20,
+                  background: 'repeating-linear-gradient(45deg, var(--accent-light), var(--accent-light) 10px, transparent 10px, transparent 20px)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  border: '2px dashed var(--accent)', position: 'relative', overflow: 'hidden',
+                }}>
+                  <div style={{
+                    background: 'rgba(255,255,255,0.9)', padding: '16px 24px', borderRadius: 12,
+                    fontFamily: 'monospace', fontSize: 14, color: 'var(--text-secondary)', textAlign: 'center',
+                  }}>
+                    [ foto aerea del centro sportivo ]
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Sport Cards */}
+          <section style={{ background: '#fff', padding: '80px 32px' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <div style={{ textAlign: 'center', marginBottom: 48 }}>
+                <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 36, fontWeight: 800, color: 'var(--text)', marginBottom: 12 }}>
+                  I Nostri Sport
+                </h2>
+                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 17, color: 'var(--text-secondary)' }}>
+                  Tre discipline, un unico centro. Scegli il tuo campo e gioca.
+                </p>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+                {[
+                  { sport: 'Tennis', icon: '🎾', desc: '4 campi in terra rossa e 2 in sintetico. Scuola tennis per tutte le età.', bg: '#E8F5E9' },
+                  { sport: 'Calcio a 5', icon: '⚽', desc: 'Campi in erba sintetica per partite, tornei e divertimento tra amici. Non istituzionale!', bg: '#FFF3E0' },
+                  { sport: 'Beach Volley', icon: '🏐', desc: 'Campi in sabbia per tornei estivi e partite libere.', bg: '#E3F2FD' },
+                ].map((s, i) => (
+                  <div key={i} style={{
+                    padding: 32, borderRadius: 16, background: s.bg, cursor: 'pointer',
+                    transition: 'all 0.3s', border: '1px solid transparent',
+                  }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.08)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                    onClick={() => setPage('prenotazioni')}>
+                    <div style={{ fontSize: 40, marginBottom: 16 }}>{s.icon}</div>
+                    <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 700, marginBottom: 8, color: 'var(--text)' }}>{s.sport}</h3>
+                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--text-secondary)', marginBottom: 16 }}>{s.desc}</p>
+                    <span style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, fontWeight: 600, color: 'var(--accent)' }}>Prenota ora →</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Event CTA Banner */}
+          <section style={{ background: 'var(--accent)', padding: '48px 32px', position: 'relative', overflow: 'hidden' }}>
+            <div style={{
+              position: 'absolute', inset: 0, opacity: 0.1,
+              background: 'repeating-linear-gradient(120deg, transparent, transparent 40px, rgba(255,255,255,0.3) 40px, rgba(255,255,255,0.3) 42px)',
+            }} />
+            <div style={{
+              maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center',
+              justifyContent: 'space-between', position: 'relative', flexWrap: 'wrap', gap: 24,
+            }}>
+              <div>
+                <div style={{
+                  display: 'inline-block', padding: '4px 12px', borderRadius: 6,
+                  background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 12,
+                  fontWeight: 700, fontFamily: 'DM Sans, sans-serif', marginBottom: 8,
+                  textTransform: 'uppercase', letterSpacing: 1,
+                }}>Evento in arrivo</div>
+                <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 4 }}>
+                  Torneo Beach Volley Estivo 2026
+                </h3>
+                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 16, color: 'rgba(255,255,255,0.85)' }}>
+                  Iscrizioni aperte! 12-13 Luglio · Coppie miste
+                </p>
+              </div>
+              <button onClick={() => setPage('tornei')} style={{
+                padding: '14px 28px', borderRadius: 12, border: '2px solid #fff',
+                background: '#fff', color: 'var(--accent)', fontSize: 16, fontWeight: 700,
+                fontFamily: 'DM Sans, sans-serif', cursor: 'pointer', transition: 'all 0.2s', whiteSpace: 'nowrap',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = 'var(--accent)'; }}>
+                Scopri di più
+              </button>
+            </div>
+          </section>
+
+          {/* Bar Section */}
+          <section style={{ background: 'var(--bg-warm)', padding: '80px 32px' }}>
+            <div style={{
+              maxWidth: 1280, margin: '0 auto', display: 'grid',
+              gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center',
+            }} className="hero-grid">
+              <div style={{
+                width: '100%', aspectRatio: '4/3', borderRadius: 16,
+                background: 'repeating-linear-gradient(-45deg, var(--accent2-light), var(--accent2-light) 10px, transparent 10px, transparent 20px)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: '2px dashed var(--accent2)',
+              }}>
+                <div style={{
+                  background: 'rgba(255,255,255,0.9)', padding: '16px 24px', borderRadius: 12,
+                  fontFamily: 'monospace', fontSize: 14, color: 'var(--text-secondary)', textAlign: 'center',
+                }}>[ foto: bar / area ristoro ]</div>
+              </div>
+              <div>
+                <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--text)', marginBottom: 16 }}>
+                  Bar & Ristoro
+                </h2>
+                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 16, lineHeight: 1.7, color: 'var(--text-secondary)', marginBottom: 16 }}>
+                  Dopo la partita, rilassati nel nostro bar con vista sui campi. Bevande fresche, snack e la possibilità di organizzare rinfreschi con cibo esterno per i tuoi eventi.
+                </p>
+                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 16, lineHeight: 1.7, color: 'var(--text-secondary)', marginBottom: 24 }}>
+                  Ideale per compleanni, feste di fine torneo e ritrovi sportivi.
+                </p>
+                <button onClick={() => setPage('contatti')} style={{
+                  padding: '12px 24px', borderRadius: 10, border: '2px solid var(--accent2)',
+                  background: 'transparent', color: 'var(--accent2)', fontSize: 15, fontWeight: 600,
+                  fontFamily: 'DM Sans, sans-serif', cursor: 'pointer', transition: 'all 0.2s',
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent2)'; e.currentTarget.style.color = '#fff'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--accent2)'; }}>
+                  Contattaci per prenotare
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* Quick CTA */}
+          <section style={{ background: '#fff', padding: '64px 32px' }}>
+            <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+              <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--text)', marginBottom: 12 }}>
+                Pronto a giocare?
+              </h2>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 17, color: 'var(--text-secondary)', marginBottom: 32 }}>
+                Prenota il tuo campo in pochi click su Playtomic
+              </p>
+              <button onClick={() => setPage('prenotazioni')} style={{
+                padding: '16px 40px', borderRadius: 14, border: 'none',
+                background: 'var(--accent)', color: '#fff', fontSize: 17, fontWeight: 700,
+                fontFamily: 'DM Sans, sans-serif', cursor: 'pointer',
+                boxShadow: '0 4px 24px rgba(13,124,95,0.3)', transition: 'all 0.2s',
+              }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                Vai alle Prenotazioni
+              </button>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    /* ─── CHI SIAMO ─── */
+    function ChiSiamoPage() {
+      return (
+        <div style={{ paddingTop: 72 }}>
+          {/* Hero */}
+          <section style={{ background: 'var(--accent-light)', padding: '64px 32px 80px' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 48, fontWeight: 800, color: 'var(--text)', marginBottom: 16 }}>
+                Chi Siamo
+              </h1>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 18, color: 'var(--text-secondary)', maxWidth: 600, lineHeight: 1.6 }}>
+                Un punto di riferimento per lo sport a Mestre dal 1985. Scopri la nostra storia, i nostri impianti e la filosofia che ci guida.
+              </p>
+            </div>
+          </section>
+
+          {/* Storia */}
+          <section style={{ padding: '80px 32px', background: '#fff' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }} className="hero-grid">
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, fontFamily: 'DM Sans, sans-serif', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12 }}>La nostra storia</div>
+                <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--text)', marginBottom: 16 }}>
+                  Dal 1985, passione per lo sport
+                </h2>
+                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 16, lineHeight: 1.7, color: 'var(--text-secondary)', marginBottom: 16 }}>
+                  Il Venice Sporting Center nasce dalla volontà di creare uno spazio dedicato allo sport e alla comunità nel cuore di Mestre. Da oltre 35 anni offriamo campi di qualità, corsi per tutte le età e un ambiente accogliente dove lo sport è protagonista.
+                </p>
+                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 16, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
+                  Affiliati alla Polisportiva Bissuola, ci impegniamo a promuovere i valori dello sport: rispetto, impegno e divertimento.
+                </p>
+              </div>
+              <div style={{
+                width: '100%', aspectRatio: '4/3', borderRadius: 16,
+                background: 'repeating-linear-gradient(45deg, var(--accent-light), var(--accent-light) 10px, transparent 10px, transparent 20px)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed var(--accent)',
+              }}>
+                <div style={{ background: 'rgba(255,255,255,0.9)', padding: '16px 24px', borderRadius: 12, fontFamily: 'monospace', fontSize: 14, color: 'var(--text-secondary)', textAlign: 'center' }}>
+                  [ foto storica del centro ]
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Polisportiva */}
+          <section style={{ padding: '80px 32px', background: 'var(--bg)' }}>
+            <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
+              <div style={{ fontSize: 12, fontWeight: 700, fontFamily: 'DM Sans, sans-serif', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12 }}>Polisportiva Bissuola</div>
+              <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--text)', marginBottom: 16 }}>
+                Parte di qualcosa di grande
+              </h2>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 16, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
+                La Polisportiva Bissuola è un'associazione sportiva dilettantistica che da decenni promuove lo sport nel territorio veneziano. Il Venice Sporting Center è il cuore pulsante delle attività sportive della polisportiva, con un'offerta che spazia dal tennis al calcio a 5 al beach volley.
+              </p>
+            </div>
+          </section>
+
+          {/* Impianti */}
+          <section style={{ padding: '80px 32px', background: '#fff' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <div style={{ textAlign: 'center', marginBottom: 48 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, fontFamily: 'DM Sans, sans-serif', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12 }}>I nostri impianti</div>
+                <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--text)' }}>Campi e Strutture</h2>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
+                {[
+                  { name: 'Campi Tennis', detail: '4 campi in terra rossa\n2 campi in sintetico\nIlluminazione notturna', bg: '#E8F5E9' },
+                  { name: 'Campi Calcio a 5', detail: 'Erba sintetica di ultima generazione\nSpogliatoi attrezzati\nPartite non istituzionali', bg: '#FFF3E0' },
+                  { name: 'Campi Beach Volley', detail: 'Sabbia di qualità\nCampi regolamentari\nTornei estivi', bg: '#E3F2FD' },
+                  { name: 'Bar & Area Ristoro', detail: 'Vista sui campi\nRinfreschi con cibo esterno\nEventi privati', bg: '#FFF8E1' },
+                ].map((f, i) => (
+                  <div key={i} style={{ padding: 28, borderRadius: 16, background: f.bg }}>
+                    <div style={{
+                      width: '100%', aspectRatio: '16/10', borderRadius: 12, marginBottom: 16,
+                      background: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.03), rgba(0,0,0,0.03) 8px, transparent 8px, transparent 16px)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed rgba(0,0,0,0.15)',
+                    }}>
+                      <span style={{ fontFamily: 'monospace', fontSize: 12, color: 'rgba(0,0,0,0.4)' }}>[ foto ]</span>
+                    </div>
+                    <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>{f.name}</h3>
+                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, lineHeight: 1.7, color: 'var(--text-secondary)', whiteSpace: 'pre-line' }}>{f.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Isometric Map Placeholder */}
+          <section style={{ padding: '80px 32px', background: 'var(--bg)' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto', textAlign: 'center' }}>
+              <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--text)', marginBottom: 32 }}>
+                Mappa del Centro
+              </h2>
+              <div style={{
+                width: '100%', maxWidth: 900, margin: '0 auto', aspectRatio: '16/9', borderRadius: 20,
+                background: 'repeating-linear-gradient(45deg, var(--accent-light), var(--accent-light) 12px, transparent 12px, transparent 24px)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: '2px dashed var(--accent)',
+              }}>
+                <div style={{
+                  background: 'rgba(255,255,255,0.92)', padding: '24px 32px', borderRadius: 14,
+                  fontFamily: 'monospace', fontSize: 15, color: 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.8,
+                }}>
+                  [ piantina isometrica del centro sportivo ]<br/>
+                  Tennis · Calcio a 5 · Beach Volley · Bar · Parcheggio
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Gallery */}
+          <section style={{ padding: '80px 32px', background: '#fff' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--text)', textAlign: 'center', marginBottom: 32 }}>
+                Galleria
+              </h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }} className="gallery-grid">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} style={{
+                    aspectRatio: i === 0 || i === 5 ? '16/10' : '1/1',
+                    gridColumn: i === 0 ? 'span 2' : i === 5 ? 'span 2' : 'span 1',
+                    borderRadius: 12, overflow: 'hidden',
+                    background: `hsl(${160 + i * 30}, 20%, 90%)`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    border: '1px dashed rgba(0,0,0,0.12)',
+                  }}>
+                    <span style={{ fontFamily: 'monospace', fontSize: 13, color: 'rgba(0,0,0,0.35)' }}>
+                      [ gallery {i + 1} ]
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    /* ─── PRENOTAZIONI ─── */
+    function PrenotazioniPage() {
+      const [selectedSport, setSelectedSport] = React.useState(null);
+
+      const sports = [
+        { id: 'calcio', name: 'Calcio a 5', icon: '⚽', desc: 'Campi in erba sintetica per partite tra amici. Nessun vincolo istituzionale — puro divertimento!', color: '#FFF3E0', accent: '#E65100', fields: '2 campi regolamentari' },
+        { id: 'beach', name: 'Beach Volley', icon: '🏐', desc: 'Sabbia e sole: prenota il tuo campo per partite libere e tornei.', color: '#E3F2FD', accent: '#1565C0', fields: '2 campi in sabbia' },
+        { id: 'tennis', name: 'Tennis', icon: '🎾', desc: 'Terra rossa e sintetico. Scegli il tuo campo preferito e prenota con Playtomic.', color: '#E8F5E9', accent: '#2E7D32', fields: '6 campi (4 terra rossa + 2 sintetico)' },
+      ];
+
+      return (
+        <div style={{ paddingTop: 72 }}>
+          <section style={{ background: 'var(--accent-light)', padding: '64px 32px 80px' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 48, fontWeight: 800, color: 'var(--text)', marginBottom: 16 }}>
+                Prenotazioni
+              </h1>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 18, color: 'var(--text-secondary)', maxWidth: 600, lineHeight: 1.6 }}>
+                Tutte le prenotazioni avvengono tramite Playtomic. Scegli il tuo sport e prenota in pochi click.
+              </p>
+            </div>
+          </section>
+
+          <section style={{ padding: '64px 32px', background: '#fff' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24, marginBottom: 48 }}>
+                {sports.map(s => (
+                  <div key={s.id}
+                    onClick={() => setSelectedSport(selectedSport === s.id ? null : s.id)}
+                    style={{
+                      padding: 32, borderRadius: 16, background: s.color, cursor: 'pointer',
+                      transition: 'all 0.3s',
+                      border: selectedSport === s.id ? `2px solid ${s.accent}` : '2px solid transparent',
+                      transform: selectedSport === s.id ? 'scale(1.02)' : 'scale(1)',
+                    }}>
+                    <div style={{ fontSize: 40, marginBottom: 16 }}>{s.icon}</div>
+                    <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 700, marginBottom: 8, color: 'var(--text)' }}>{s.name}</h3>
+                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, lineHeight: 1.6, color: 'var(--text-secondary)', marginBottom: 12 }}>{s.desc}</p>
+                    <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, fontWeight: 600, color: s.accent, marginBottom: 16 }}>{s.fields}</div>
+                    <a href="https://playtomic.io" target="_blank" rel="noopener noreferrer"
+                      onClick={e => e.stopPropagation()}
+                      style={{
+                        display: 'inline-block', padding: '12px 24px', borderRadius: 10,
+                        background: s.accent, color: '#fff', fontSize: 15, fontWeight: 700,
+                        fontFamily: 'DM Sans, sans-serif', textDecoration: 'none', transition: 'opacity 0.2s',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
+                      onMouseLeave={e => e.currentTarget.style.opacity = '1'}>
+                      Prenota su Playtomic →
+                    </a>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{
+                padding: 32, borderRadius: 16, background: 'var(--bg)',
+                border: '1px solid var(--border)', maxWidth: 700, margin: '0 auto',
+              }}>
+                <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 12 }}>
+                  ℹ️ Come funziona
+                </h3>
+                <ol style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, lineHeight: 2, color: 'var(--text-secondary)', paddingLeft: 20 }}>
+                  <li>Scegli lo sport e il campo che preferisci</li>
+                  <li>Verrai reindirizzato su Playtomic per completare la prenotazione</li>
+                  <li>Le tariffe sono visibili direttamente in fase di prenotazione</li>
+                  <li>Presentati al centro 10 minuti prima dell'orario prenotato</li>
+                </ol>
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    /* ─── SCUOLA TENNIS ─── */
+    function ScuolaTennisPage() {
+      const [activeTab, setActiveTab] = React.useState('corsi');
+
+      const corsi = [
+        { name: 'Mini Tennis', age: '4-6 anni', schedule: 'Lun-Mer 16:00-17:00', desc: 'Approccio al tennis attraverso il gioco. Racchette e palline adatte ai più piccoli.', maestro: 'Marco Rossi', tel: '+39 333 1234567' },
+        { name: 'Tennis Junior', age: '7-12 anni', schedule: 'Mar-Gio 16:00-17:30', desc: 'Fondamentali del tennis: dritto, rovescio, servizio. Preparazione ai primi tornei.', maestro: 'Marco Rossi', tel: '+39 333 1234567' },
+        { name: 'Tennis Ragazzi', age: '13-17 anni', schedule: 'Lun-Mer-Ven 17:00-18:30', desc: 'Tecnica avanzata, tattica di gioco e preparazione atletica per agonisti.', maestro: 'Laura Bianchi', tel: '+39 334 7654321' },
+        { name: 'Tennis Adulti', age: '18+ anni', schedule: 'Mar-Gio 19:00-20:30', desc: 'Corsi per tutti i livelli: principianti, intermedi e avanzati. Lezioni di gruppo e individuali.', maestro: 'Laura Bianchi', tel: '+39 334 7654321' },
+      ];
+
+      return (
+        <div style={{ paddingTop: 72 }}>
+          <section style={{ background: '#E8F5E9', padding: '64px 32px 80px' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 48, fontWeight: 800, color: 'var(--text)', marginBottom: 16 }}>
+                Scuola Tennis
+              </h1>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 18, color: 'var(--text-secondary)', maxWidth: 600, lineHeight: 1.6 }}>
+                Corsi per tutte le età con maestri federali qualificati. Dai primi passi all'agonismo.
+              </p>
+            </div>
+          </section>
+
+          {/* Tabs */}
+          <section style={{ padding: '0 32px', background: '#fff', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', gap: 0 }}>
+              {[{ id: 'corsi', label: 'Corsi' }, { id: 'risultati', label: 'Risultati' }].map(tab => (
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
+                  padding: '16px 24px', fontFamily: 'DM Sans, sans-serif', fontSize: 15, fontWeight: 600,
+                  color: activeTab === tab.id ? 'var(--accent)' : 'var(--text-secondary)',
+                  background: 'none', border: 'none',
+                  borderBottom: activeTab === tab.id ? '3px solid var(--accent)' : '3px solid transparent',
+                  cursor: 'pointer', transition: 'all 0.2s',
+                }}>{tab.label}</button>
+              ))}
+            </div>
+          </section>
+
+          {activeTab === 'corsi' && (
+            <section style={{ padding: '64px 32px', background: '#fff' }}>
+              <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+                  {corsi.map((c, i) => (
+                    <div key={i} style={{
+                      padding: 28, borderRadius: 16, background: 'var(--bg)',
+                      border: '1px solid var(--border)', transition: 'all 0.3s',
+                    }}
+                      onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.06)'}
+                      onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                        <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>{c.name}</h3>
+                        <span style={{
+                          padding: '4px 10px', borderRadius: 6, background: 'var(--accent-light)',
+                          fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', color: 'var(--accent)', whiteSpace: 'nowrap',
+                        }}>{c.age}</span>
+                      </div>
+                      <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, lineHeight: 1.6, color: 'var(--text-secondary)', marginBottom: 16 }}>{c.desc}</p>
+                      <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                        🕐 {c.schedule}
+                      </div>
+                      <div style={{
+                        padding: '12px 16px', borderRadius: 10, background: '#fff',
+                        border: '1px solid var(--border)', marginTop: 12,
+                      }}>
+                        <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
+                          Maestro: {c.maestro}
+                        </div>
+                        <a href={`tel:${c.tel.replace(/\s/g, '')}`} style={{
+                          fontFamily: 'DM Sans, sans-serif', fontSize: 14, color: 'var(--accent)', textDecoration: 'none',
+                        }}>📞 {c.tel}</a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {activeTab === 'risultati' && (
+            <section style={{ padding: '64px 32px', background: '#fff' }}>
+              <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }} className="two-col">
+                  <div style={{ padding: 32, borderRadius: 16, background: 'var(--bg)', border: '1px solid var(--border)' }}>
+                    <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>P.U.C.</h3>
+                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, color: 'var(--text-secondary)', marginBottom: 8 }}>Provvedimento Unico di Classifica</p>
+                    <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+                      <span style={{ padding: '4px 10px', borderRadius: 6, background: '#E8F5E9', fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', color: '#2E7D32' }}>Iscrivibili</span>
+                      <span style={{ padding: '4px 10px', borderRadius: 6, background: '#FFF3E0', fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', color: '#E65100' }}>Competizioni</span>
+                    </div>
+                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, lineHeight: 1.7, color: 'var(--text-secondary)', marginBottom: 20 }}>
+                      Consulta le classifiche e i risultati dei nostri atleti tesserati attraverso il portale MyFITP.
+                    </p>
+                    <a href="https://www.fitp.it" target="_blank" rel="noopener noreferrer" style={{
+                      display: 'inline-block', padding: '12px 24px', borderRadius: 10,
+                      background: 'var(--accent)', color: '#fff', fontSize: 15, fontWeight: 600,
+                      fontFamily: 'DM Sans, sans-serif', textDecoration: 'none',
+                    }}>Vai a MyFITP →</a>
+                  </div>
+
+                  <div style={{ padding: 32, borderRadius: 16, background: 'var(--bg)', border: '1px solid var(--border)' }}>
+                    <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>FITP</h3>
+                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, color: 'var(--text-secondary)', marginBottom: 20 }}>Federazione Italiana Tennis e Padel</p>
+                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, lineHeight: 1.7, color: 'var(--text-secondary)', marginBottom: 20 }}>
+                      Cerca i risultati dei tornei federali, classifiche aggiornate e calendario gare sul sito ufficiale FITP.
+                    </p>
+                    <a href="https://www.fitp.it/Tornei/Ricerca-tornei" target="_blank" rel="noopener noreferrer" style={{
+                      display: 'inline-block', padding: '12px 24px', borderRadius: 10,
+                      background: 'var(--accent)', color: '#fff', fontSize: 15, fontWeight: 600,
+                      fontFamily: 'DM Sans, sans-serif', textDecoration: 'none',
+                    }}>Ricerca Tornei FITP →</a>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+        </div>
+      );
+    }
+
+    /* ─── TORNEI ─── */
+    function TorneiPage() {
+      const [filter, setFilter] = React.useState('tutti');
+
+      const tornei = [
+        { sport: 'beach', name: 'Torneo Beach Volley Estivo', date: '12-13 Luglio 2026', status: 'Iscrizioni aperte', desc: 'Torneo coppie miste. Due giorni di sport e divertimento sulla sabbia.', prize: 'Premi per i primi 3 classificati', color: '#E3F2FD', accent: '#1565C0' },
+        { sport: 'calcio', name: 'Torneo Calcio a 5 Primavera', date: '24-25 Maggio 2026', status: 'Iscrizioni aperte', desc: 'Squadre da 5+2 riserve. Gironi + eliminazione diretta. Aperto a tutti!', prize: 'Coppa + premi', color: '#FFF3E0', accent: '#E65100' },
+        { sport: 'tennis', name: 'Torneo Sociale Tennis', date: '7-8 Giugno 2026', status: 'Prossimamente', desc: 'Torneo riservato ai soci del centro. Singolare maschile e femminile.', prize: 'Trofei', color: '#E8F5E9', accent: '#2E7D32' },
+        { sport: 'beach', name: 'Beach Volley Night Cup', date: '2 Agosto 2026', status: 'Prossimamente', desc: 'Torneo serale sotto le luci. Coppie 2vs2. Musica e aperitivo inclusi!', prize: 'Premi + aperitivo', color: '#E3F2FD', accent: '#1565C0' },
+        { sport: 'calcio', name: 'Torneo Calcetto Ferragosto', date: '14-15 Agosto 2026', status: 'Prossimamente', desc: 'Il torneo estivo più atteso! Squadre libere, tutti sono benvenuti.', prize: 'Coppa + premi in natura', color: '#FFF3E0', accent: '#E65100' },
+        { sport: 'tennis', name: 'Torneo FIT 4ª Categoria', date: 'Settembre 2026', status: 'Prossimamente', desc: 'Torneo federale omologato FITP. Singolare maschile, limitato 4.1-4.6.', prize: 'Punti classifica FIT', color: '#E8F5E9', accent: '#2E7D32' },
+      ];
+
+      const filtered = filter === 'tutti' ? tornei : tornei.filter(t => t.sport === filter);
+
+      return (
+        <div style={{ paddingTop: 72 }}>
+          <section style={{ background: 'var(--accent-light)', padding: '64px 32px 80px' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 48, fontWeight: 800, color: 'var(--text)', marginBottom: 16 }}>Tornei</h1>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 18, color: 'var(--text-secondary)', maxWidth: 600, lineHeight: 1.6 }}>
+                Scopri i prossimi tornei e iscriviti. Calcio a 5, beach volley e tennis: c'è spazio per tutti.
+              </p>
+            </div>
+          </section>
+
+          <section style={{ padding: '48px 32px', background: '#fff' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <div style={{ display: 'flex', gap: 8, marginBottom: 32, flexWrap: 'wrap' }}>
+                {[
+                  { id: 'tutti', label: 'Tutti' },
+                  { id: 'calcio', label: '⚽ Calcio a 5' },
+                  { id: 'beach', label: '🏐 Beach Volley' },
+                  { id: 'tennis', label: '🎾 Tennis' },
+                ].map(f => (
+                  <button key={f.id} onClick={() => setFilter(f.id)} style={{
+                    padding: '8px 20px', borderRadius: 20, cursor: 'pointer',
+                    fontFamily: 'DM Sans, sans-serif', fontSize: 14, fontWeight: 600,
+                    background: filter === f.id ? 'var(--accent)' : 'var(--bg)',
+                    color: filter === f.id ? '#fff' : 'var(--text-secondary)',
+                    border: filter === f.id ? 'none' : '1px solid var(--border)',
+                    transition: 'all 0.2s',
+                  }}>{f.label}</button>
+                ))}
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 24 }}>
+                {filtered.map((t, i) => (
+                  <div key={`${filter}-${i}`} style={{
+                    padding: 28, borderRadius: 16, background: t.color,
+                    border: `1px solid ${t.accent}22`, transition: 'all 0.3s',
+                  }}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, gap: 8 }}>
+                      <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 19, fontWeight: 700, color: 'var(--text)' }}>{t.name}</h3>
+                      <span style={{
+                        padding: '4px 10px', borderRadius: 6, whiteSpace: 'nowrap',
+                        background: t.status === 'Iscrizioni aperte' ? '#C8E6C9' : '#FFF9C4',
+                        fontSize: 11, fontWeight: 700, fontFamily: 'DM Sans, sans-serif',
+                        color: t.status === 'Iscrizioni aperte' ? '#1B5E20' : '#F57F17',
+                      }}>{t.status}</span>
+                    </div>
+                    <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, fontWeight: 600, color: t.accent, marginBottom: 8 }}>📅 {t.date}</div>
+                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, lineHeight: 1.6, color: 'var(--text-secondary)', marginBottom: 12 }}>{t.desc}</p>
+                    <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 16 }}>🏆 {t.prize}</div>
+                    {t.status === 'Iscrizioni aperte' && (
+                      <button style={{
+                        padding: '10px 20px', borderRadius: 10, border: 'none',
+                        background: t.accent, color: '#fff', fontSize: 14, fontWeight: 700,
+                        fontFamily: 'DM Sans, sans-serif', cursor: 'pointer', transition: 'opacity 0.2s',
+                      }}
+                        onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+                        onMouseLeave={e => e.currentTarget.style.opacity = '1'}>
+                        Iscriviti ora
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    /* ─── CONTATTI ─── */
+    function ContattiPage() {
+      const [form, setForm] = React.useState({ name: '', email: '', phone: '', subject: '', message: '' });
+      const [submitted, setSubmitted] = React.useState(false);
+      const [errors, setErrors] = React.useState({});
+
+      const validate = () => {
+        const e = {};
+        if (!form.name.trim()) e.name = 'Inserisci il tuo nome';
+        if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) e.email = "Inserisci un'email valida";
+        if (!form.message.trim()) e.message = 'Inserisci un messaggio';
+        return e;
+      };
+
+      const handleSubmit = (ev) => {
+        ev.preventDefault();
+        const e = validate();
+        setErrors(e);
+        if (Object.keys(e).length === 0) setSubmitted(true);
+      };
+
+      const inputStyle = (field) => ({
+        width: '100%', padding: '12px 16px', borderRadius: 10, fontFamily: 'DM Sans, sans-serif', fontSize: 15,
+        border: errors[field] ? '2px solid #e53935' : '1px solid var(--border)',
+        background: 'var(--bg)', color: 'var(--text)', outline: 'none', transition: 'border 0.2s', boxSizing: 'border-box',
+      });
+
+      return (
+        <div style={{ paddingTop: 72 }}>
+          <section style={{ background: 'var(--accent-light)', padding: '64px 32px 80px' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <h1 style={{ fontFamily: 'Sora, sans-serif', fontSize: 48, fontWeight: 800, color: 'var(--text)', marginBottom: 16 }}>Contatti</h1>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 18, color: 'var(--text-secondary)', maxWidth: 600, lineHeight: 1.6 }}>
+                Hai domande? Vuoi organizzare un evento? Scrivici o vieni a trovarci.
+              </p>
+            </div>
+          </section>
+
+          <section style={{ padding: '64px 32px', background: '#fff' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }} className="two-col">
+              {/* Contact Info */}
+              <div>
+                <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 28, fontWeight: 800, color: 'var(--text)', marginBottom: 24 }}>Dove Siamo</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 32 }}>
+                  {[
+                    { icon: '📍', label: 'Indirizzo', value: 'Via Example 123, 30170 Mestre (VE)', sub: 'Zona Bissuola' },
+                    { icon: '📞', label: 'Telefono', value: '+39 041 123 4567' },
+                    { icon: '💬', label: 'WhatsApp', value: '+39 333 987 6543' },
+                    { icon: '✉️', label: 'Email', value: 'info@venicesportingcenter.it' },
+                    { icon: '🕐', label: 'Orari', value: 'Lun-Ven 8:00-22:00 · Sab-Dom 8:00-20:00' },
+                  ].map((c, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                      <div style={{
+                        width: 44, height: 44, borderRadius: 12, background: 'var(--accent-light)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0,
+                      }}>{c.icon}</div>
+                      <div>
+                        <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 2 }}>{c.label}</div>
+                        <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, fontWeight: 600, color: 'var(--text)' }}>{c.value}</div>
+                        {c.sub && <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, color: 'var(--text-secondary)' }}>{c.sub}</div>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ padding: 20, borderRadius: 14, background: 'var(--bg)', border: '1px solid var(--border)' }}>
+                  <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>Come raggiungerci</h3>
+                  <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
+                    <strong>In auto:</strong> Uscita tangenziale Mestre-Bissuola. Ampio parcheggio gratuito.<br/>
+                    <strong>Con i mezzi:</strong> Autobus linea 4 e 7, fermata Bissuola.<br/>
+                    <strong>In bici:</strong> Pista ciclabile lungo Via Bissuola.
+                  </p>
+                </div>
+              </div>
+
+              {/* Contact Form */}
+              <div>
+                <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 28, fontWeight: 800, color: 'var(--text)', marginBottom: 24 }}>Scrivici</h2>
+                {submitted ? (
+                  <div style={{ padding: 48, borderRadius: 16, background: '#E8F5E9', textAlign: 'center' }}>
+                    <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
+                    <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 22, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>Messaggio inviato!</h3>
+                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, color: 'var(--text-secondary)', marginBottom: 20 }}>
+                      Ti risponderemo il prima possibile.
+                    </p>
+                    <button onClick={() => { setSubmitted(false); setForm({ name: '', email: '', phone: '', subject: '', message: '' }); }} style={{
+                      padding: '10px 20px', borderRadius: 10, border: 'none', background: 'var(--accent)',
+                      color: '#fff', fontSize: 14, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', cursor: 'pointer',
+                    }}>Invia un altro messaggio</button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <div>
+                      <input placeholder="Nome e Cognome *" value={form.name}
+                        onChange={e => setForm({...form, name: e.target.value})} style={inputStyle('name')}
+                        onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+                        onBlur={e => e.target.style.borderColor = errors.name ? '#e53935' : 'var(--border)'} />
+                      {errors.name && <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: '#e53935', marginTop: 4 }}>{errors.name}</div>}
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                      <div>
+                        <input placeholder="Email *" value={form.email}
+                          onChange={e => setForm({...form, email: e.target.value})} style={inputStyle('email')}
+                          onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+                          onBlur={e => e.target.style.borderColor = errors.email ? '#e53935' : 'var(--border)'} />
+                        {errors.email && <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: '#e53935', marginTop: 4 }}>{errors.email}</div>}
+                      </div>
+                      <input placeholder="Telefono" value={form.phone}
+                        onChange={e => setForm({...form, phone: e.target.value})} style={inputStyle('phone')}
+                        onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+                        onBlur={e => e.target.style.borderColor = 'var(--border)'} />
+                    </div>
+                    <select value={form.subject} onChange={e => setForm({...form, subject: e.target.value})}
+                      style={{...inputStyle('subject'), appearance: 'none', cursor: 'pointer', color: form.subject ? 'var(--text)' : 'var(--text-secondary)'}}>
+                      <option value="">Seleziona argomento</option>
+                      <option>Prenotazione campi</option>
+                      <option>Scuola tennis</option>
+                      <option>Tornei</option>
+                      <option>Rinfreschi / Eventi</option>
+                      <option>Altro</option>
+                    </select>
+                    <div>
+                      <textarea placeholder="Il tuo messaggio *" value={form.message}
+                        onChange={e => setForm({...form, message: e.target.value})}
+                        rows={5} style={{...inputStyle('message'), resize: 'vertical'}}
+                        onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+                        onBlur={e => e.target.style.borderColor = errors.message ? '#e53935' : 'var(--border)'} />
+                      {errors.message && <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 12, color: '#e53935', marginTop: 4 }}>{errors.message}</div>}
+                    </div>
+                    <button type="submit" style={{
+                      padding: '14px 32px', borderRadius: 12, border: 'none', background: 'var(--accent)',
+                      color: '#fff', fontSize: 16, fontWeight: 700, fontFamily: 'DM Sans, sans-serif',
+                      cursor: 'pointer', transition: 'all 0.2s', alignSelf: 'flex-start',
+                    }}
+                      onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+                      onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}>
+                      Invia Messaggio
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* Map placeholder */}
+          <section style={{ padding: '0 32px 64px', background: '#fff' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <div style={{
+                width: '100%', height: 400, borderRadius: 20, overflow: 'hidden',
+                background: '#e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: '1px solid var(--border)',
+              }}>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: 48, marginBottom: 12 }}>🗺️</div>
+                  <div style={{ fontFamily: 'monospace', fontSize: 14, color: 'var(--text-secondary)' }}>
+                    [ Google Maps embed ]<br/>
+                    Venice Sporting Center, Mestre (VE)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    /* ─── FOOTER ─── */
+    function Footer({ setPage }) {
+      return (
+        <footer style={{ background: 'var(--text)', padding: '64px 32px 32px' }}>
+          <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 40, marginBottom: 48 }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+                  <div style={{
+                    width: 40, height: 40, borderRadius: 8, background: 'var(--accent)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: '#fff', fontWeight: 800, fontSize: 14, fontFamily: 'Sora, sans-serif',
+                  }}>VSC</div>
+                  <div style={{ fontFamily: 'Sora, sans-serif', fontWeight: 700, fontSize: 14, color: '#fff', lineHeight: 1.2 }}>
+                    Venice<br/>Sporting Center
+                  </div>
+                </div>
+                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
+                  Il tuo centro sportivo a Mestre, Venezia.<br/>Tennis · Calcio a 5 · Beach Volley
+                </p>
+              </div>
+              <div>
+                <h4 style={{ fontFamily: 'Sora, sans-serif', fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Navigazione</h4>
+                {['home','chi-siamo','prenotazioni','scuola-tennis','tornei','contatti'].map(id => (
+                  <div key={id} style={{ marginBottom: 8 }}>
+                    <button onClick={() => { setPage(id); window.scrollTo(0, 0); }} style={{
+                      background: 'none', border: 'none', padding: 0, fontFamily: 'DM Sans, sans-serif', fontSize: 14,
+                      color: 'rgba(255,255,255,0.6)', cursor: 'pointer', transition: 'color 0.2s',
+                    }}
+                      onMouseEnter={e => e.target.style.color = '#fff'}
+                      onMouseLeave={e => e.target.style.color = 'rgba(255,255,255,0.6)'}>
+                      {id === 'home' ? 'Home' : id.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ')}
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <h4 style={{ fontFamily: 'Sora, sans-serif', fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Contatti</h4>
+                <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 2 }}>
+                  Via Example 123, 30170 Mestre (VE)<br/>
+                  Tel: +39 041 123 4567<br/>
+                  WhatsApp: +39 333 987 6543<br/>
+                  info@venicesportingcenter.it
+                </div>
+              </div>
+              <div>
+                <h4 style={{ fontFamily: 'Sora, sans-serif', fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 16 }}>Seguici</h4>
+                <div style={{ display: 'flex', gap: 10 }}>
+                  {[
+                    { href: 'https://instagram.com', svg: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg> },
+                    { href: 'https://facebook.com', svg: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg> },
+                  ].map((s, i) => (
+                    <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" style={{
+                      width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)', transition: 'all 0.2s',
+                    }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = '#fff'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; }}>
+                      {s.svg}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
+                © 2026 Venice Sporting Center · Polisportiva Bissuola ASD
+              </p>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
+                P.IVA 00000000000
+              </p>
+            </div>
+          </div>
+        </footer>
+      );
+    }
+
+    /* ─── APP ─── */
+    function App() {
+      const [page, setPage] = React.useState(() => {
+        try { return localStorage.getItem('vsc-page') || 'home'; } catch { return 'home'; }
+      });
+      const [scrolled, setScrolled] = React.useState(false);
+
+      React.useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', onScroll);
+        return () => window.removeEventListener('scroll', onScroll);
+      }, []);
+
+      React.useEffect(() => {
+        try { localStorage.setItem('vsc-page', page); } catch {}
+        window.scrollTo(0, 0);
+      }, [page]);
+
+      const renderPage = () => {
+        switch (page) {
+          case 'chi-siamo':    return <ChiSiamoPage />;
+          case 'prenotazioni': return <PrenotazioniPage />;
+          case 'scuola-tennis': return <ScuolaTennisPage />;
+          case 'tornei':       return <TorneiPage />;
+          case 'contatti':     return <ContattiPage />;
+          default:             return <HomePage setPage={setPage} />;
+        }
+      };
+
+      return (
+        <>
+          <Nav currentPage={page} setPage={setPage} scrolled={scrolled} />
+          <main>{renderPage()}</main>
+          <Footer setPage={setPage} />
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
