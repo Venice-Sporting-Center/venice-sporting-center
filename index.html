@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Venice Sporting Center</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -83,17 +84,8 @@
             {/* Logo area */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}
               onClick={() => { setPage('home'); setMobileOpen(false); }}>
-              <div style={{
-                width: 44, height: 44, borderRadius: 8, background: 'var(--accent)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#fff', fontWeight: 800, fontSize: 15, fontFamily: 'Sora, sans-serif',
-              }}>VSC</div>
-              <div style={{
-                width: 36, height: 36, borderRadius: 6, background: 'var(--accent2)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#fff', fontWeight: 700, fontSize: 9, fontFamily: 'Sora, sans-serif',
-                textAlign: 'center', lineHeight: 1.2,
-              }}>PB</div>
+              <img src="assets/logo-vsc.png" alt="Venice Sporting Center" style={{ height: 72, width: 'auto', objectFit: 'contain' }} />
+              <img src="assets/logo-polisportiva-bissuola.png" alt="Polisportiva Bissuola" style={{ height: 64, width: 'auto', objectFit: 'contain' }} />
               <div style={{ fontFamily: 'Sora, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--text)', lineHeight: 1.2 }}>
                 Venice<br/>Sporting Center
               </div>
@@ -884,11 +876,7 @@
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 40, marginBottom: 48 }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-                  <div style={{
-                    width: 40, height: 40, borderRadius: 8, background: 'var(--accent)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: '#fff', fontWeight: 800, fontSize: 14, fontFamily: 'Sora, sans-serif',
-                  }}>VSC</div>
+                  <img src="assets/logo-vsc.png" alt="Venice Sporting Center" style={{ height: 68, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
                   <div style={{ fontFamily: 'Sora, sans-serif', fontWeight: 700, fontSize: 14, color: '#fff', lineHeight: 1.2 }}>
                     Venice<br/>Sporting Center
                   </div>
