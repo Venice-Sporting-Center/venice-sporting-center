@@ -154,7 +154,25 @@
     /* ─── HOMEPAGE ─── */
     function HomePage({ setPage }) {
       const [heroVisible, setHeroVisible] = React.useState(false);
+      const [videoIndex, setVideoIndex] = React.useState(0);
+      const [prevIndex, setPrevIndex] = React.useState(null);
+      const [sliding, setSliding] = React.useState(false);
+      const heroVideos = [
+        'assets/videos/campi_tennis_drone_view.mp4.mp4',
+        'assets/videos/campi_calcetto_drone_view.mp4',
+        'assets/videos/campi_beach_drone_view.mp4',
+      ];
       React.useEffect(() => { const t = setTimeout(() => setHeroVisible(true), 80); return () => clearTimeout(t); }, []);
+
+      const goTo = (idx) => {
+        if (sliding || idx === videoIndex) return;
+        setPrevIndex(videoIndex);
+        setVideoIndex(idx);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          setSliding(true);
+          setTimeout(() => { setSliding(false); setPrevIndex(null); }, 650);
+        }));
+      };
 
       return (
         <div>
@@ -230,19 +248,40 @@
                 transform: heroVisible ? 'translateY(0)' : 'translateY(40px)',
                 opacity: heroVisible ? 1 : 0, transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s',
               }}>
-                {/* Hero image placeholder */}
-                <div style={{
-                  width: '100%', aspectRatio: '4/3', borderRadius: 20,
-                  background: 'repeating-linear-gradient(45deg, var(--accent-light), var(--accent-light) 10px, transparent 10px, transparent 20px)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  border: '2px dashed var(--accent)', position: 'relative', overflow: 'hidden',
-                }}>
+                <div style={{ position: 'relative', width: 'fit-content', height: 720, borderRadius: 20, overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.15)' }}>
+                  {/* Video uscente — scivola a sinistra */}
+                  {prevIndex !== null && (
+                    <div style={{
+                      position: 'absolute', top: 0, left: 0, height: '100%', zIndex: 2,
+                      transform: sliding ? 'translateX(-100%)' : 'translateX(0)',
+                      transition: sliding ? 'transform 0.6s cubic-bezier(0.4,0,0.2,1)' : 'none',
+                    }}>
+                      <video muted playsInline style={{ width: 'auto', height: '100%', display: 'block' }}>
+                        <source src={heroVideos[prevIndex]} type="video/mp4" />
+                      </video>
+                    </div>
+                  )}
+                  {/* Video entrante — in-flow (mantiene la larghezza del contenitore), entra da destra */}
                   <div style={{
-                    background: 'rgba(255,255,255,0.9)', padding: '16px 24px', borderRadius: 12,
-                    fontFamily: 'monospace', fontSize: 14, color: 'var(--text-secondary)', textAlign: 'center',
+                    height: '100%',
+                    transform: (prevIndex !== null && !sliding) ? 'translateX(100%)' : 'translateX(0)',
+                    transition: (prevIndex !== null && sliding) ? 'transform 0.6s cubic-bezier(0.4,0,0.2,1)' : 'none',
                   }}>
-                    [ foto aerea del centro sportivo ]
+                    <video key={videoIndex} autoPlay muted playsInline
+                      onEnded={() => goTo((videoIndex + 1) % heroVideos.length)}
+                      style={{ width: 'auto', height: '100%', display: 'block' }}>
+                      <source src={heroVideos[videoIndex]} type="video/mp4" />
+                    </video>
                   </div>
+                </div>
+                <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 16 }}>
+                  {heroVideos.map((_, i) => (
+                    <button key={i} onClick={() => goTo(i)} style={{
+                      width: i === videoIndex ? 24 : 8, height: 8, borderRadius: 4, border: 'none', cursor: 'pointer',
+                      background: i === videoIndex ? 'var(--accent)' : 'rgba(0,0,0,0.2)',
+                      transition: 'all 0.3s', padding: 0,
+                    }} />
+                  ))}
                 </div>
               </div>
             </div>
@@ -320,21 +359,7 @@
 
           {/* Bar Section */}
           <section style={{ background: 'var(--bg-warm)', padding: '80px 32px' }}>
-            <div style={{
-              maxWidth: 1280, margin: '0 auto', display: 'grid',
-              gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center',
-            }} className="hero-grid">
-              <div style={{
-                width: '100%', aspectRatio: '4/3', borderRadius: 16,
-                background: 'repeating-linear-gradient(-45deg, var(--accent2-light), var(--accent2-light) 10px, transparent 10px, transparent 20px)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                border: '2px dashed var(--accent2)',
-              }}>
-                <div style={{
-                  background: 'rgba(255,255,255,0.9)', padding: '16px 24px', borderRadius: 12,
-                  fontFamily: 'monospace', fontSize: 14, color: 'var(--text-secondary)', textAlign: 'center',
-                }}>[ foto: bar / area ristoro ]</div>
-              </div>
+            <div style={{ maxWidth: 720, margin: '0 auto' }}>
               <div>
                 <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--text)', marginBottom: 16 }}>
                   Bar & Ristoro
@@ -414,14 +439,8 @@
                   Affiliati alla Polisportiva Bissuola, ci impegniamo a promuovere i valori dello sport: rispetto, impegno e divertimento.
                 </p>
               </div>
-              <div style={{
-                width: '100%', aspectRatio: '4/3', borderRadius: 16,
-                background: 'repeating-linear-gradient(45deg, var(--accent-light), var(--accent-light) 10px, transparent 10px, transparent 20px)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px dashed var(--accent)',
-              }}>
-                <div style={{ background: 'rgba(255,255,255,0.9)', padding: '16px 24px', borderRadius: 12, fontFamily: 'monospace', fontSize: 14, color: 'var(--text-secondary)', textAlign: 'center' }}>
-                  [ foto storica del centro ]
-                </div>
+              <div style={{ width: '100%', aspectRatio: '4/3', borderRadius: 16, overflow: 'hidden', boxShadow: '0 12px 40px rgba(0,0,0,0.1)' }}>
+                <img src="assets/images/campi_tennis_indoor_side_2.jpeg" alt="Campi da tennis indoor" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
               </div>
             </div>
           </section>
@@ -448,18 +467,19 @@
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
                 {[
-                  { name: 'Campi Tennis', detail: '4 campi in terra rossa\n2 campi in sintetico\nIlluminazione notturna', bg: '#E8F5E9' },
-                  { name: 'Campi Calcio a 5', detail: 'Erba sintetica di ultima generazione\nSpogliatoi attrezzati\nPartite non istituzionali', bg: '#FFF3E0' },
-                  { name: 'Campi Beach Volley', detail: 'Sabbia di qualità\nCampi regolamentari\nTornei estivi', bg: '#E3F2FD' },
-                  { name: 'Bar & Area Ristoro', detail: 'Vista sui campi\nRinfreschi con cibo esterno\nEventi privati', bg: '#FFF8E1' },
+                  { name: 'Campi Tennis', detail: '4 campi in terra rossa\n2 campi in sintetico\nIlluminazione notturna', bg: '#E8F5E9', img: 'assets/images/campi_tennis_indoor_side.jpeg', alt: 'Campi da tennis' },
+                  { name: 'Campi Calcio a 5', detail: 'Erba sintetica di ultima generazione\nSpogliatoi attrezzati\nPartite non istituzionali', bg: '#FFF3E0', img: 'assets/images/campi_calcetto_indoor_side.jpeg', alt: 'Campo calcio a 5' },
+                  { name: 'Campi Beach Volley', detail: 'Sabbia di qualità\nCampi regolamentari\nTornei estivi', bg: '#E3F2FD', img: 'assets/images/campi_beach_outdoor_side.jpeg', alt: 'Campi beach volley' },
+                  { name: 'Bar & Area Ristoro', detail: 'Vista sui campi\nRinfreschi con cibo esterno\nEventi privati', bg: '#FFF8E1', img: null, alt: null },
                 ].map((f, i) => (
                   <div key={i} style={{ padding: 28, borderRadius: 16, background: f.bg }}>
-                    <div style={{
-                      width: '100%', aspectRatio: '16/10', borderRadius: 12, marginBottom: 16,
-                      background: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.03), rgba(0,0,0,0.03) 8px, transparent 8px, transparent 16px)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed rgba(0,0,0,0.15)',
-                    }}>
-                      <span style={{ fontFamily: 'monospace', fontSize: 12, color: 'rgba(0,0,0,0.4)' }}>[ foto ]</span>
+                    <div style={{ width: '100%', aspectRatio: '16/10', borderRadius: 12, marginBottom: 16, overflow: 'hidden' }}>
+                      {f.img
+                        ? <img src={f.img} alt={f.alt} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                        : <div style={{ width: '100%', height: '100%', background: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.03), rgba(0,0,0,0.03) 8px, transparent 8px, transparent 16px)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed rgba(0,0,0,0.15)' }}>
+                            <span style={{ fontFamily: 'monospace', fontSize: 12, color: 'rgba(0,0,0,0.4)' }}>[ foto ]</span>
+                          </div>
+                      }
                     </div>
                     <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>{f.name}</h3>
                     <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, lineHeight: 1.7, color: 'var(--text-secondary)', whiteSpace: 'pre-line' }}>{f.detail}</p>
@@ -492,6 +512,32 @@
             </div>
           </section>
 
+          {/* Drone Videos */}
+          <section style={{ padding: '80px 32px', background: '#fff' }}>
+            <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+              <div style={{ textAlign: 'center', marginBottom: 48 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, fontFamily: 'DM Sans, sans-serif', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12 }}>Riprese aeree</div>
+                <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--text)' }}>I Nostri Campi dall'Alto</h2>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+                {[
+                  { src: 'assets/videos/campi_tennis_drone_view.mp4.mp4', label: 'Tennis', color: '#E8F5E9' },
+                  { src: 'assets/videos/campi_calcetto_drone_view.mp4', label: 'Calcio a 5', color: '#FFF3E0' },
+                  { src: 'assets/videos/campi_beach_drone_view.mp4', label: 'Beach Volley', color: '#E3F2FD' },
+                ].map((v, i) => (
+                  <div key={i} style={{ borderRadius: 16, overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.08)' }}>
+                    <video controls muted loop playsInline style={{ width: '100%', display: 'block', aspectRatio: '16/9', objectFit: 'cover', background: v.color }}>
+                      <source src={v.src} type="video/mp4" />
+                    </video>
+                    <div style={{ padding: '12px 16px', background: v.color }}>
+                      <span style={{ fontFamily: 'Sora, sans-serif', fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>{v.label}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
           {/* Gallery */}
           <section style={{ padding: '80px 32px', background: '#fff' }}>
             <div style={{ maxWidth: 1280, margin: '0 auto' }}>
@@ -499,18 +545,22 @@
                 Galleria
               </h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }} className="gallery-grid">
-                {[...Array(6)].map((_, i) => (
+                {[
+                  { src: 'assets/images/campi_tennis_indoor_side.jpeg', alt: 'Campo tennis indoor', span: 2, ratio: '16/10' },
+                  { src: 'assets/images/campi_calcetto_indoor_half_court_2.jpeg', alt: 'Campo calcio a 5', span: 1, ratio: '1/1' },
+                  { src: 'assets/images/racchette_palline_tennis_primo_piano.jpeg', alt: 'Racchette e palline da tennis', span: 1, ratio: '1/1' },
+                  { src: 'assets/images/campi_beach_indoor_focus_net.jpeg', alt: 'Rete beach volley indoor', span: 1, ratio: '1/1' },
+                  { src: 'assets/images/campi_beach_indoor_side.jpeg', alt: 'Campo beach volley indoor', span: 1, ratio: '1/1' },
+                  { src: 'assets/images/campi_calcetto_indoor_half_view.jpeg', alt: 'Campo calcio a 5 vista laterale', span: 2, ratio: '16/10' },
+                ].map((img, i) => (
                   <div key={i} style={{
-                    aspectRatio: i === 0 || i === 5 ? '16/10' : '1/1',
-                    gridColumn: i === 0 ? 'span 2' : i === 5 ? 'span 2' : 'span 1',
+                    aspectRatio: img.ratio,
+                    gridColumn: `span ${img.span}`,
                     borderRadius: 12, overflow: 'hidden',
-                    background: `hsl(${160 + i * 30}, 20%, 90%)`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    border: '1px dashed rgba(0,0,0,0.12)',
                   }}>
-                    <span style={{ fontFamily: 'monospace', fontSize: 13, color: 'rgba(0,0,0,0.35)' }}>
-                      [ gallery {i + 1} ]
-                    </span>
+                    <img src={img.src} alt={img.alt} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s' }}
+                      onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
+                      onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
                   </div>
                 ))}
               </div>
@@ -596,13 +646,27 @@
 
     /* ─── SCUOLA TENNIS ─── */
     function ScuolaTennisPage() {
-      const [activeTab, setActiveTab] = React.useState('corsi');
+      const [activeTab, setActiveTab] = React.useState('maestri');
 
-      const corsi = [
-        { name: 'Mini Tennis', age: '4-6 anni', schedule: 'Lun-Mer 16:00-17:00', desc: 'Approccio al tennis attraverso il gioco. Racchette e palline adatte ai più piccoli.', maestro: 'Marco Rossi', tel: '+39 333 1234567' },
-        { name: 'Tennis Junior', age: '7-12 anni', schedule: 'Mar-Gio 16:00-17:30', desc: 'Fondamentali del tennis: dritto, rovescio, servizio. Preparazione ai primi tornei.', maestro: 'Marco Rossi', tel: '+39 333 1234567' },
-        { name: 'Tennis Ragazzi', age: '13-17 anni', schedule: 'Lun-Mer-Ven 17:00-18:30', desc: 'Tecnica avanzata, tattica di gioco e preparazione atletica per agonisti.', maestro: 'Laura Bianchi', tel: '+39 334 7654321' },
-        { name: 'Tennis Adulti', age: '18+ anni', schedule: 'Mar-Gio 19:00-20:30', desc: 'Corsi per tutti i livelli: principianti, intermedi e avanzati. Lezioni di gruppo e individuali.', maestro: 'Laura Bianchi', tel: '+39 334 7654321' },
+      const maestri = [
+        {
+          nome: 'Federico Pollini',
+          ruolo: 'Direttore Tecnico',
+          qualifiche: ['Istruttore FIT 2° Grado'],
+          tel: '+39 338 6989214',
+        },
+        {
+          nome: 'Elena Scomparin',
+          ruolo: 'Maestra',
+          qualifiche: ['Istruttore FIT 1° Grado', 'Preparatore Atletico 1° Grado'],
+          tel: '+39 338 6989214',
+        },
+        {
+          nome: 'Oscar Carraro',
+          ruolo: 'Maestro',
+          qualifiche: ['Istruttore FIT 1° Grado'],
+          tel: '+39 338 6989214',
+        },
       ];
 
       return (
@@ -613,7 +677,7 @@
                 Scuola Tennis
               </h1>
               <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 18, color: 'var(--text-secondary)', maxWidth: 600, lineHeight: 1.6 }}>
-                Corsi per tutte le età con maestri federali qualificati. Dai primi passi all'agonismo.
+                Maestri federali qualificati per tutte le età e tutti i livelli.
               </p>
             </div>
           </section>
@@ -621,7 +685,7 @@
           {/* Tabs */}
           <section style={{ padding: '0 32px', background: '#fff', borderBottom: '1px solid var(--border)' }}>
             <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', gap: 0 }}>
-              {[{ id: 'corsi', label: 'Corsi' }, { id: 'risultati', label: 'Risultati' }].map(tab => (
+              {[{ id: 'maestri', label: 'Maestri' }, { id: 'risultati', label: 'Risultati' }].map(tab => (
                 <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{
                   padding: '16px 24px', fontFamily: 'DM Sans, sans-serif', fontSize: 15, fontWeight: 600,
                   color: activeTab === tab.id ? 'var(--accent)' : 'var(--text-secondary)',
@@ -633,39 +697,37 @@
             </div>
           </section>
 
-          {activeTab === 'corsi' && (
+          {activeTab === 'maestri' && (
             <section style={{ padding: '64px 32px', background: '#fff' }}>
-              <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
-                  {corsi.map((c, i) => (
+              <div style={{ maxWidth: 900, margin: '0 auto' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
+                  {maestri.map((m, i) => (
                     <div key={i} style={{
-                      padding: 28, borderRadius: 16, background: 'var(--bg)',
+                      padding: 32, borderRadius: 16, background: 'var(--bg)',
                       border: '1px solid var(--border)', transition: 'all 0.3s',
                     }}
                       onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.06)'}
                       onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                        <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>{c.name}</h3>
-                        <span style={{
-                          padding: '4px 10px', borderRadius: 6, background: 'var(--accent-light)',
-                          fontSize: 12, fontWeight: 600, fontFamily: 'DM Sans, sans-serif', color: 'var(--accent)', whiteSpace: 'nowrap',
-                        }}>{c.age}</span>
-                      </div>
-                      <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, lineHeight: 1.6, color: 'var(--text-secondary)', marginBottom: 16 }}>{c.desc}</p>
-                      <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 8 }}>
-                        🕐 {c.schedule}
-                      </div>
                       <div style={{
-                        padding: '12px 16px', borderRadius: 10, background: '#fff',
-                        border: '1px solid var(--border)', marginTop: 12,
-                      }}>
-                        <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
-                          Maestro: {c.maestro}
-                        </div>
-                        <a href={`tel:${c.tel.replace(/\s/g, '')}`} style={{
-                          fontFamily: 'DM Sans, sans-serif', fontSize: 14, color: 'var(--accent)', textDecoration: 'none',
-                        }}>📞 {c.tel}</a>
+                        width: 56, height: 56, borderRadius: '50%', background: 'var(--accent-light)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: 24, marginBottom: 16,
+                      }}>🎾</div>
+                      <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 20, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>{m.nome}</h3>
+                      <div style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 16 }}>{m.ruolo}</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 20 }}>
+                        {m.qualifiche.map((q, j) => (
+                          <span key={j} style={{
+                            display: 'inline-block', padding: '4px 10px', borderRadius: 6,
+                            background: 'var(--accent-light)', fontSize: 12, fontWeight: 600,
+                            fontFamily: 'DM Sans, sans-serif', color: 'var(--accent)',
+                          }}>{q}</span>
+                        ))}
                       </div>
+                      <a href={`tel:${m.tel.replace(/\s/g, '')}`} style={{
+                        fontFamily: 'DM Sans, sans-serif', fontSize: 14, fontWeight: 600,
+                        color: 'var(--accent)', textDecoration: 'none',
+                      }}>📞 {m.tel}</a>
                     </div>
                   ))}
                 </div>
@@ -838,14 +900,6 @@
                 ))}
               </div>
 
-              <div style={{ padding: 20, borderRadius: 14, background: 'var(--bg)', border: '1px solid var(--border)' }}>
-                <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>Come raggiungerci</h3>
-                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-                  <strong>In auto:</strong> Uscita tangenziale Mestre-Bissuola. Ampio parcheggio gratuito.<br/>
-                  <strong>Con i mezzi:</strong> Autobus linea 4 e 7, fermata Bissuola.<br/>
-                  <strong>In bici:</strong> Pista ciclabile lungo Via Bissuola.
-                </p>
-              </div>
             </div>
           </section>
 
