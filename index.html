@@ -300,8 +300,8 @@
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
                 {[
-                  { sport: 'Tennis', icon: '🎾', desc: '4 campi in terra rossa e 2 in sintetico. Scuola tennis per tutte le età.', bg: '#E8F5E9' },
-                  { sport: 'Calcio a 5', icon: '⚽', desc: 'Campi in erba sintetica per partite, tornei e divertimento tra amici. Non istituzionale!', bg: '#FFF3E0' },
+                  { sport: 'Tennis', icon: '🎾', desc: '3 campi in erba sintetica. Scuola tennis per tutte le età.', bg: '#E8F5E9' },
+                  { sport: 'Calcio a 5', icon: '⚽', desc: 'Campi in erba sintetica per partite, tornei e divertimento tra amici.', bg: '#FFF3E0' },
                   { sport: 'Beach Volley', icon: '🏐', desc: 'Campi in sabbia per tornei estivi e partite libere.', bg: '#E3F2FD' },
                 ].map((s, i) => (
                   <div key={i} style={{
@@ -321,67 +321,7 @@
             </div>
           </section>
 
-          {/* Event CTA Banner */}
-          <section style={{ background: 'var(--accent)', padding: '48px 32px', position: 'relative', overflow: 'hidden' }}>
-            <div style={{
-              position: 'absolute', inset: 0, opacity: 0.1,
-              background: 'repeating-linear-gradient(120deg, transparent, transparent 40px, rgba(255,255,255,0.3) 40px, rgba(255,255,255,0.3) 42px)',
-            }} />
-            <div style={{
-              maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center',
-              justifyContent: 'space-between', position: 'relative', flexWrap: 'wrap', gap: 24,
-            }}>
-              <div>
-                <div style={{
-                  display: 'inline-block', padding: '4px 12px', borderRadius: 6,
-                  background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 12,
-                  fontWeight: 700, fontFamily: 'DM Sans, sans-serif', marginBottom: 8,
-                  textTransform: 'uppercase', letterSpacing: 1,
-                }}>Evento in arrivo</div>
-                <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 4 }}>
-                  Torneo Beach Volley Estivo 2026
-                </h3>
-                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 16, color: 'rgba(255,255,255,0.85)' }}>
-                  Iscrizioni aperte! 12-13 Luglio · Coppie miste
-                </p>
-              </div>
-              <button onClick={() => setPage('contatti')} style={{
-                padding: '14px 28px', borderRadius: 12, border: '2px solid #fff',
-                background: '#fff', color: 'var(--accent)', fontSize: 16, fontWeight: 700,
-                fontFamily: 'DM Sans, sans-serif', cursor: 'pointer', transition: 'all 0.2s', whiteSpace: 'nowrap',
-              }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#fff'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = 'var(--accent)'; }}>
-                Scopri di più
-              </button>
-            </div>
-          </section>
 
-          {/* Bar Section */}
-          <section style={{ background: 'var(--bg-warm)', padding: '80px 32px' }}>
-            <div style={{ maxWidth: 720, margin: '0 auto' }}>
-              <div>
-                <h2 style={{ fontFamily: 'Sora, sans-serif', fontSize: 32, fontWeight: 800, color: 'var(--text)', marginBottom: 16 }}>
-                  Bar & Ristoro
-                </h2>
-                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 16, lineHeight: 1.7, color: 'var(--text-secondary)', marginBottom: 16 }}>
-                  Dopo la partita, rilassati nel nostro bar con vista sui campi. Bevande fresche, snack e la possibilità di organizzare rinfreschi con cibo esterno per i tuoi eventi.
-                </p>
-                <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 16, lineHeight: 1.7, color: 'var(--text-secondary)', marginBottom: 24 }}>
-                  Ideale per compleanni, feste di fine torneo e ritrovi sportivi.
-                </p>
-                <button onClick={() => setPage('contatti')} style={{
-                  padding: '12px 24px', borderRadius: 10, border: '2px solid var(--accent2)',
-                  background: 'transparent', color: 'var(--accent2)', fontSize: 15, fontWeight: 600,
-                  fontFamily: 'DM Sans, sans-serif', cursor: 'pointer', transition: 'all 0.2s',
-                }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--accent2)'; e.currentTarget.style.color = '#fff'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--accent2)'; }}>
-                  Contattaci per prenotare
-                </button>
-              </div>
-            </div>
-          </section>
 
           {/* Quick CTA */}
           <section style={{ background: '#fff', padding: '64px 32px' }}>
@@ -467,10 +407,9 @@
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
                 {[
-                  { name: 'Campi Tennis', detail: '4 campi in terra rossa\n2 campi in sintetico\nIlluminazione notturna', bg: '#E8F5E9', img: 'assets/images/campi_tennis_indoor_side.jpeg', alt: 'Campi da tennis' },
+                  { name: 'Campi Tennis', detail: '2 campi in erba sintetica\nIlluminazione notturna', bg: '#E8F5E9', img: 'assets/images/campi_tennis_indoor_side.jpeg', alt: 'Campi da tennis' },
                   { name: 'Campi Calcio a 5', detail: 'Erba sintetica di ultima generazione\nSpogliatoi attrezzati\nPartite non istituzionali', bg: '#FFF3E0', img: 'assets/images/campi_calcetto_indoor_side.jpeg', alt: 'Campo calcio a 5' },
                   { name: 'Campi Beach Volley', detail: 'Sabbia di qualità\nCampi regolamentari\nTornei estivi', bg: '#E3F2FD', img: 'assets/images/campi_beach_outdoor_side.jpeg', alt: 'Campi beach volley' },
-                  { name: 'Bar & Area Ristoro', detail: 'Vista sui campi\nRinfreschi con cibo esterno\nEventi privati', bg: '#FFF8E1', img: null, alt: null },
                 ].map((f, i) => (
                   <div key={i} style={{ padding: 28, borderRadius: 16, background: f.bg }}>
                     <div style={{ width: '100%', aspectRatio: '16/10', borderRadius: 12, marginBottom: 16, overflow: 'hidden' }}>
@@ -481,8 +420,7 @@
                           </div>
                       }
                     </div>
-                    <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 8 }}>{f.name}</h3>
-                    <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 14, lineHeight: 1.7, color: 'var(--text-secondary)', whiteSpace: 'pre-line' }}>{f.detail}</p>
+                    <h3 style={{ fontFamily: 'Sora, sans-serif', fontSize: 18, fontWeight: 700, color: 'var(--text)', marginBottom: 0 }}>{f.name}</h3>
                   </div>
                 ))}
               </div>
@@ -506,7 +444,7 @@
                   fontFamily: 'monospace', fontSize: 15, color: 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.8,
                 }}>
                   [ piantina isometrica del centro sportivo ]<br/>
-                  Tennis · Calcio a 5 · Beach Volley · Bar · Parcheggio
+                  Tennis · Calcio a 5 · Beach Volley · Parcheggio
                 </div>
               </div>
             </div>
@@ -575,9 +513,9 @@
       const [selectedSport, setSelectedSport] = React.useState(null);
 
       const sports = [
-        { id: 'calcio', name: 'Calcio a 5', icon: '⚽', desc: 'Campi in erba sintetica per partite tra amici. Nessun vincolo istituzionale — puro divertimento!', color: '#FFF3E0', accent: '#E65100', fields: '2 campi sintetici', playtomicUrl: 'https://playtomic.com/it/clubs/venice-sporting-center?sport=FUTSAL' },
+        { id: 'calcio', name: 'Calcio a 5', icon: '⚽', desc: 'Campi in erba sintetica per partite tra amici.', color: '#FFF3E0', accent: '#E65100', fields: '3 campi in erba sintetica', playtomicUrl: 'https://playtomic.com/it/clubs/venice-sporting-center?sport=FUTSAL' },
         { id: 'beach', name: 'Beach Volley', icon: '🏐', desc: 'Sabbia e sole: prenota il tuo campo per partite libere e tornei.', color: '#E3F2FD', accent: '#1565C0', fields: '2 campi in sabbia', playtomicUrl: 'https://playtomic.com/clubs/venice-sporting-center?sport=BEACH_VOLLEY' },
-        { id: 'tennis', name: 'Tennis', icon: '🎾', desc: 'Terra rossa e sintetico. Scegli il tuo campo preferito e prenota con Playtomic.', color: '#E8F5E9', accent: '#2E7D32', fields: '6 campi (4 terra rossa + 2 sintetico)', playtomicUrl: 'https://playtomic.com/it/clubs/venice-sporting-center?sport=BEACH_TENNIS' },
+        { id: 'tennis', name: 'Tennis', icon: '🎾', desc: 'Campi in erba sintetica. Scegli il tuo campo preferito e prenota con Playtomic.', color: '#E8F5E9', accent: '#2E7D32', fields: '3 campi in erba sintetica', playtomicUrl: 'https://playtomic.com/it/clubs/venice-sporting-center?sport=BEACH_TENNIS' },
       ];
 
       return (
