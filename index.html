@@ -21,6 +21,8 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body { background: #fff; -webkit-font-smoothing: antialiased; font-family: 'DM Sans', sans-serif; }
+    html, body, #root { min-height: 100vh; }
+    #root { display: flex; flex-direction: column; }
 
     @media (max-width: 768px) {
       .hero-grid { grid-template-columns: 1fr !important; }
@@ -955,7 +957,7 @@
       return (
         <>
           <Nav currentPage={page} setPage={setPage} scrolled={scrolled} />
-          <main>{renderPage()}</main>
+          <main style={{ flex: 1 }}>{renderPage()}</main>
           <Footer setPage={setPage} />
         </>
       );
