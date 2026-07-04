@@ -24,15 +24,19 @@
     html, body, #root { min-height: 100vh; }
     #root { display: flex; flex-direction: column; }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       .hero-grid { grid-template-columns: 1fr !important; }
       .desktop-nav { display: none !important; }
       .mobile-toggle { display: flex !important; }
       .gallery-grid { grid-template-columns: 1fr 1fr !important; }
       .gallery-grid > div { grid-column: span 1 !important; }
       .two-col { grid-template-columns: 1fr !important; }
+      .hero-video-wrapper { display: none !important; }
+      .nav-inner { padding: 0 16px !important; }
+      .nav-logo-vsc { height: 40px !important; }
+      .nav-logo-bissuola { height: 72px !important; }
     }
-    @media (min-width: 769px) {
+    @media (min-width: 1025px) {
       .mobile-menu { display: none !important; }
     }
   </style>
@@ -82,12 +86,12 @@
           <div style={{
             maxWidth: 1280, margin: '0 auto', padding: '0 32px', height: 72,
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          }}>
+          }} className="nav-inner">
             {/* Logo area */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}
               onClick={() => { setPage('home'); setMobileOpen(false); }}>
-              <img src="assets/logo-vsc.png" alt="Venice Sporting Center" style={{ height: 64, width: 'auto', objectFit: 'contain' }} />
-              <img src="assets/logo-polisportiva-bissuola.png" alt="Polisportiva Bissuola" style={{ height: 140, width: 'auto', objectFit: 'contain' }} />
+              <img src="assets/logo-vsc.png" alt="Venice Sporting Center" className="nav-logo-vsc" style={{ height: 64, width: 'auto', objectFit: 'contain' }} />
+              <img src="assets/logo-polisportiva-bissuola.png" alt="Polisportiva Bissuola" className="nav-logo-bissuola" style={{ height: 140, width: 'auto', objectFit: 'contain' }} />
               <div style={{ fontFamily: 'Sora, sans-serif', fontWeight: 700, fontSize: 15, color: 'var(--text)', lineHeight: 1.2 }}>
                 Venice<br/>Sporting Center
               </div>
@@ -246,7 +250,7 @@
                 </div>
               </div>
 
-              <div style={{
+              <div className="hero-video-wrapper" style={{
                 transform: heroVisible ? 'translateY(0)' : 'translateY(40px)',
                 opacity: heroVisible ? 1 : 0, transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s',
               }}>
